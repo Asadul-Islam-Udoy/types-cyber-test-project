@@ -19,4 +19,4 @@ export default {
   };
 
 
-  // #88a3d2
+  //rgb(30, 69, 136)

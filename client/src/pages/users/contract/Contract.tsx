@@ -1,3 +1,4 @@
+import ShareIcon from '@mui/icons-material/Share';
 function Contract() {
   const style = {
     backgroundColor: "#88a3d2",
@@ -45,11 +46,16 @@ function Contract() {
             </div>
           </div>
           <div className="flex flex-col md:w-[70%] w-[90%] ml-5 gap-1">
-            <button className="bg-blue-500 bg-[#06214f] py-2 text-white rounded-lg">
+            <button className="bg-[#06214f] py-2 text-white rounded-lg">
               Submit
             </button>
           </div>
         </div>
+        <div className="flex flex-col border  md:w-[70%] w-[90%] ml-5 mt-4 gap-1">
+            <button className=" text-blue-600 py-2 rounded-lg">
+              <ShareIcon/>Share
+            </button>
+          </div>
         </div>
         <div className="">{/* img */}
             <img className="md:w-[1000px]" src="/contract-logo.png"/>

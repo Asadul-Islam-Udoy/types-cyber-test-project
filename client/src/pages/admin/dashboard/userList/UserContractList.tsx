@@ -4,20 +4,30 @@ import DownloadIcon from "@mui/icons-material/Download";
 import LoopIcon from '@mui/icons-material/Loop';
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
+import UserContractTable from "../../../../components/dashboard/UserContractTable";
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useNavigate } from "react-router-dom";
 function UserList() {
+  const navigate = useNavigate();
+  const logoutHandler=()=>{
+   navigate('/logout');
+  }
   return (
     <div>
       <AdminNavbar />
       <AdminSidebar />
       <div className="bg-gray-200  w-[80%] flex flex-col  items-center gap-4 ml-[20%] min-h-screen">
         <div className="flex w-[90%] mt-4 justify-between">
-          <h3 className="ml-5 font-bold text-gray-600 text-[25px]">Employes</h3>
+          <h3 className=" font-bold text-gray-600  text-[25px]">Users Contract Pages</h3>
           <div className="mr-5 flex gap-7">
-            <div className="border border-2 rounded-sm text-[#88a3d2] flex justify-center items-center border-[#88a3d2] w-10 h-10">
+            <div title="download pdf file" className="border border-2 cursor-pointer rounded-sm text-[#88a3d2] flex justify-center items-center border-[#88a3d2] w-10 h-10">
               <DownloadIcon />
             </div>
-            <div className="border border-2 rounded-sm text-[#88a3d2] flex justify-center items-center border-[#88a3d2] w-10 h-10">
+            <div title="add contract" className="border border-2 cursor-pointer rounded-sm text-[#88a3d2] flex justify-center items-center border-[#88a3d2] w-10 h-10">
               <AddIcon />
+            </div>
+            <div onClick={logoutHandler} title="logout" className="border border-2 cursor-pointer rounded-sm text-[#88a3d2] flex justify-center items-center border-[#88a3d2] w-10 h-10">
+              <LogoutIcon/>
             </div>
           </div>
         </div>
@@ -36,6 +46,9 @@ function UserList() {
             <div className="border rounded-sm border-2 text-[#88a3d2] flex justify-center items-center border-[#88a3d2] w-10 h-10 mt-2 mr-3">
               <LoopIcon />
             </div>
+          </div>
+          <div className="m-3">
+            <UserContractTable/>
           </div>
         </div>
       </div>

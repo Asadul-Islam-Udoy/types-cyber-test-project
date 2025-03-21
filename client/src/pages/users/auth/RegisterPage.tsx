@@ -6,8 +6,8 @@ function RegisterPage() {
   const[showPassword,setShowPassword] = useState(false)
   return (
     <div className="w-full h-screen  bg-white flex justify-center items-center">
-      <div className="w-[55%]  md:h-[68%] grid grid-cols-1 md:grid-cols-2 gap-4 flex items-center justify-around bg-gradient-to-r from-custom-blue shadow-lg rounded-sm via-custom-light-blue to-custom-lightest-blue">
-        <div className="flex flex-col items-center gap-4 justify-center">
+      <div className="w-[55%]  md:min-h-[68%] grid grid-cols-1 md:grid-cols-2 gap-4 flex items-center justify-around bg-gradient-to-r from-custom-blue shadow-lg rounded-sm via-custom-light-blue to-custom-lightest-blue">
+        <div className="flex flex-col  items-center gap-4 justify-center">
           <div>
             <img
               alt="nusaiba-construction"
@@ -25,13 +25,13 @@ function RegisterPage() {
             </p>
           </div>
         </div>
-        <div className="flex flex-col gap-4 ">
+        <div className="flex flex-col py-6 gap-4 ">
           <div className="flex flex-col md:w-[70%] w-[90%] ml-5 gap-1">
             <label className="text-gray-600">Username</label>
             <input className="py-3 focus:outline-none pl-2 rounded-lg" />
           </div>
           <div className="flex flex-col md:w-[70%] w-[90%] ml-5 gap-1">
-            <label className="text-gray-600">Email</label>
+            <label className="text-gray-600">Email Address</label>
             <input className="py-3 focus:outline-none pl-2 rounded-lg" />
           </div>
           <div className="flex flex-col md:w-[70%] w-[90%] ml-5 gap-1">
@@ -53,7 +53,7 @@ function RegisterPage() {
             </div>
           </div>
           <div className="flex flex-col md:w-[70%] w-[90%] ml-5 gap-1">
-            <button className="bg-blue-500 bg-[#184086] py-2 text-white rounded-lg">
+            <button className=" bg-[#184086] py-2 text-white rounded-lg">
               Sign Up
             </button>
           </div>
