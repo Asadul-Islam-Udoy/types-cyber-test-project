@@ -21,7 +21,7 @@ function LogoutPage() {
               </p>
             </div>
             <div className="flex flex-col md:w-[70%] w-[90%] ml-5 gap-1">
-            <button onClick={()=>navigate('/login')} className=" bg-[#184086] py-2 text-white rounded-lg">
+            <button onClick={()=>[navigate('/login')]} className=" bg-[#184086] py-2 text-white rounded-lg">
               Go back to login
             </button>
           </div>

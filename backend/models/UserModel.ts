@@ -1,4 +1,4 @@
-import mongoose,{Document,Schema} from "mongoose";
+import mongoose,{Document} from "mongoose";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
@@ -6,7 +6,8 @@ export interface UserId extends Document{
     username:string,
     email:string,
     password:string,
-    ComparePassword():Promise<boolean>,
+    role:string,
+    ComparePassword(password:string):Promise<boolean>,
     CreateUserToken():Promise<string>
 }
 
@@ -27,6 +28,10 @@ const UserSchema = new mongoose.Schema<UserId>({
         type:String,
         required:[true,'password is required!'],
         select:false
+    },
+    role:{
+        type:String,
+        default:'user'
     }
 },{timestamps:true});
 

@@ -1,11 +1,56 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
+import { toast } from "react-toastify";
+import HostUrls from "../../host/HostUrls";
+import { useAuth } from "../../../context/UserContext";
 function LoginPage() {
-  const [showPassword, setShowPassword] = useState(false);
+  const [auth] = useAuth();
+  interface User{
+    email:string,
+    password:string,
+  }
+  const navigate = useNavigate();
+  const[showPassword,setShowPassword] = useState<boolean>(false);
+  const[lodding,setLodding] = useState<boolean>(false);
+  const[user,setUser] = useState<User>({
+    email:'',
+    password:'',
+  });
+
+  const SumbitHanler = async(e:FormEvent<HTMLFormElement>)=>{
+    e.preventDefault();
+    try{
+     setLodding(true);
+     const config = { method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(user)}
+     const response =  await fetch(HostUrls+'/api/users/login',config);
+     const data = await response.json();
+     if(!response.ok){
+      toast.error(data.message);
+      setLodding(false)
+     }
+     else{
+     localStorage.setItem('auth',JSON.stringify(data));
+     setLodding(false);
+     if(auth?.user?.role == 'admin'){
+      navigate('/dashboard/users/contract');
+     }
+     else{
+      navigate('/');
+     }
+     }
+    }
+    catch(error:any){
+      console.log(error);
+      //toast.error(error.response.data.message)
+    }
+    finally{
+      setLodding(false)
+    }
+  }
   return (
-    <form>
+    <form onSubmit={SumbitHanler}>
       <div className="w-full h-screen  bg-white flex justify-center items-center">
         <div className="w-[55%]  md:h-[68%] grid grid-cols-1 md:grid-cols-2 gap-4 flex items-center justify-around bg-gradient-to-r from-custom-blue shadow-lg rounded-sm via-custom-light-blue to-custom-lightest-blue">
           <div className="flex flex-col items-center gap-4 justify-center">
@@ -29,13 +74,15 @@ function LoginPage() {
           <div className="flex flex-col gap-4 ">
             <div className="flex flex-col md:w-[70%] w-[90%] ml-5 gap-1">
               <label className="text-gray-600">Email</label>
-              <input className="py-3 focus:outline-none pl-2 rounded-lg" />
+              <input type="email" required value={user.email} onChange={(e)=>setUser((pre)=>({...pre,email:e.target.value}))} className="py-3 focus:outline-none pl-2 rounded-lg" />
             </div>
             <div className="flex flex-col md:w-[70%] w-[90%] ml-5 gap-1">
               <label className="text-gray-600">Password</label>
               <div className="relative flex w-full">
                 <input
+                  required
                   type={showPassword ? "text" : "password"}
+                  value={user.password} onChange={(e)=>setUser((pre)=>({...pre,password:e.target.value}))}
                   className="py-3 w-full focus:outline-none pl-2 rounded-lg"
                 />
                 <div
@@ -56,8 +103,8 @@ function LoginPage() {
               </Link>
             </div>
             <div className="flex flex-col md:w-[70%] w-[90%] ml-5 gap-1">
-              <button className=" bg-[#184086] py-2 text-white rounded-lg">
-                Login
+              <button type="submit" className=" bg-[#184086] py-2 text-white rounded-lg">
+                {lodding?'Login...':'Login'}
               </button>
             </div>
             <span className="md:w-[80%] w-[100%] justify-center flex">or</span>

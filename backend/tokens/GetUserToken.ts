@@ -1,7 +1,7 @@
 import { UserId } from "../models/UserModel";
 
-const GetUserToken=(user:UserId,res:any,statusCode:number)=>{
-   const token = user.CreateUserToken();
+const GetUserToken= async(user:UserId,res:any,statusCode:number)=>{
+   const token = await user.CreateUserToken();
    if(!token){
     return res.status(400).json({
         success:false,
@@ -13,13 +13,14 @@ const GetUserToken=(user:UserId,res:any,statusCode:number)=>{
     httpOnly:false,
     sameSite:'Strict'
    }
-
    res.status(statusCode).cookie('token',option).json({
     success:true,
     message:'user get successfully!',
     user:{
+        _id:user._id,
         username:user.username,
-        email:user.email
+        email:user.email,
+        role:user.role
     },
     token
    })

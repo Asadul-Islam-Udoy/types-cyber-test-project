@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from 'dotenv';
+import cors from 'cors'
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import GlobalErrorHanler from './errors/GlobalErrorHandler';
@@ -17,7 +18,7 @@ dotenv.config({path:'.env'});
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(cookieParser());
-
+app.use(cors());
 ///custom hanlers
 app.use(GlobalErrorHanler);
 

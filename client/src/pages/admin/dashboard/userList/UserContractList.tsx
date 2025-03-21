@@ -7,10 +7,28 @@ import SearchIcon from "@mui/icons-material/Search";
 import UserContractTable from "../../../../components/dashboard/UserContractTable";
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from "react-router-dom";
-function UserList() {
+import { useState } from "react";
+import HostUrls from "../../../host/HostUrls";
+import { toast } from "react-toastify";
+function UserContractList() {
   const navigate = useNavigate();
-  const logoutHandler=()=>{
-   navigate('/logout');
+  const [loading,setLodding] = useState<boolean>(false);
+  const logoutHandler=async()=>{
+   setLodding(true);
+   const config = {method:'GET',headers:{'Content-Type':'application/json'}}
+   const response = await fetch(HostUrls+'/api/users/logout/',config);
+   const data = await response.json()
+   if(!response.ok){
+    toast.error(data.message);
+    setLodding(false)
+   }
+   else{
+    toast.success('logout successfully!');
+    localStorage.removeItem('auth');
+    setLodding(false)
+    navigate('/logout');
+   }
+
   }
   return (
     <div>
@@ -27,7 +45,7 @@ function UserList() {
               <AddIcon />
             </div>
             <div onClick={logoutHandler} title="logout" className="border border-2 cursor-pointer rounded-sm text-[#88a3d2] flex justify-center items-center border-[#88a3d2] w-10 h-10">
-              <LogoutIcon/>
+              <LogoutIcon/>{loading && '...'}
             </div>
           </div>
         </div>
@@ -56,4 +74,4 @@ function UserList() {
   );
 }
 
-export default UserList;
+export default UserContractList;
