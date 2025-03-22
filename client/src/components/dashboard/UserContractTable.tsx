@@ -4,8 +4,11 @@ import Paper from "@mui/material/Paper";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { toast } from "react-toastify";
+import HostUrls from "../../pages/host/HostUrls";
+import { Link } from "react-router-dom";
 const columns: GridColDef[] = [
-  { field: "id", headerName: "ID", width: 70 },
+  { field: "sn", headerName: "SN", width: 70 },
   { field: "name", headerName: "Name", width: 130 },
   { field: "email", headerName: "Email", width: 130 },
   {
@@ -14,7 +17,7 @@ const columns: GridColDef[] = [
     width: 290,
   },
   {
-    field: "date-time",
+    field: "date_time",
     headerName: "Date-Time",
     width: 90,
   },
@@ -22,7 +25,7 @@ const columns: GridColDef[] = [
     field: "action",
     headerName: "Action",
     width: 120,
-    renderCell: () => {
+    renderCell: (props) => {
       return (
         <>
           <div className="flex gap-4 ">
@@ -30,7 +33,10 @@ const columns: GridColDef[] = [
               <FileDownloadIcon />
             </div>
             <div className="text-green-400 cursor-pointer ">
-              <VisibilityIcon />
+              <Link to={`/pdf-file/${props.row.message}`} rel="noopener noreferrer">
+                 <VisibilityIcon />
+              </Link>
+    
             </div>
             <div className="text-red-500 cursor-pointer">
               <DeleteOutlineIcon />
@@ -42,21 +48,60 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rows = [
-  { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-  { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-  { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-  { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-  { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-  { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-  { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-  { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-  { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-];
-
 const paginationModel = { page: 0, pageSize: 5 };
 
 export default function UserContractTable() {
+  interface UserMessageProps {
+    user: string;
+    message: string;
+  }
+  const [lodding, setLodding] = React.useState<boolean>(false);
+  const [UserMessages, setUserMessages] = React.useState<UserMessageProps[]>(
+    []
+  );
+
+  React.useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        setLodding(true);
+        const config: any = {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include", // Important for sending cookies
+        };
+        const response = await fetch(
+          HostUrls + "/api/users/get/messages/",
+          config
+        );
+        const data = await response.json();
+
+        if (!response.ok) {
+          toast.error(data.message);
+        } else {
+          setUserMessages(data.messages); // Store messages in state
+        }
+      } catch (error: any) {
+        toast.error(error.message);
+      } finally {
+        setLodding(false);
+      }
+    };
+
+    fetchMessages();
+  }, []); // Run once when component mounts
+
+  const rows: any[] = [];
+  UserMessages.forEach((element: any, index) => {
+    const data: any = {
+      sn: index + 1,
+      id: element?._id,
+      name: element.user.username,
+      email: element.user.email,
+      message: element.message,
+      date_time: element.createdAt,
+    };
+    rows.push(data);
+  });
   return (
     <Paper sx={{ height: 400, width: "100%" }}>
       <DataGrid

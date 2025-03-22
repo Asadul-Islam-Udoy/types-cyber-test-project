@@ -9,11 +9,11 @@ const GetUserToken= async(user:UserId,res:any,statusCode:number)=>{
     })
    }
    const option ={
-    expires:new Date(Date.now() + 60*60*1000*24),
-    httpOnly:false,
-    sameSite:'Strict'
+    maxAge: 3600000, 
+    httpOnly:true,
+    secure: process.env.NODE_ENV === 'production', // Set to true for production (HTTPS)
    }
-   res.status(statusCode).cookie('token',option).json({
+   res.status(statusCode).cookie('token',token,option).json({
     success:true,
     message:'user get successfully!',
     user:{

@@ -9,6 +9,7 @@ import LogoutPage from "./pages/users/auth/LogoutPage";
 import UserContractList from "./pages/admin/dashboard/userList/UserContractList";
 import { useAuth } from "./context/UserContext";
 import AdminMiddleware from "./middleware/AdminMiddleware";
+import ContractPdf from "./pages/admin/dashboard/userfile/ContractPdf";
 
 function App() {
   const [auth] = useAuth();
@@ -25,6 +26,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/logout" element={<LogoutPage />} />
             <Route path="/" element={<Contract />} />
+            <Route path="/pdf-file/:pdfs" element={<ContractPdf/>}/>
             <Route path="/dashboard/users/contract" element={
               <AdminMiddleware isAdmin={admiMiddle}>
                 <UserContractList/>

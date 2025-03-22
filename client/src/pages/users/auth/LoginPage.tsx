@@ -6,132 +6,153 @@ import { toast } from "react-toastify";
 import HostUrls from "../../host/HostUrls";
 import { useAuth } from "../../../context/UserContext";
 function LoginPage() {
-  const [auth] = useAuth();
-  interface User{
-    email:string,
-    password:string,
+  const [auth,setAuth] = useAuth();
+  interface User {
+    email: string;
+    password: string;
   }
   const navigate = useNavigate();
-  const[showPassword,setShowPassword] = useState<boolean>(false);
-  const[lodding,setLodding] = useState<boolean>(false);
-  const[user,setUser] = useState<User>({
-    email:'',
-    password:'',
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [lodding, setLodding] = useState<boolean>(false);
+  const [user, setUser] = useState<User>({
+    email: "",
+    password: "",
   });
-
-  const SumbitHanler = async(e:FormEvent<HTMLFormElement>)=>{
+  const SumbitHanler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try{
-     setLodding(true);
-     const config = { method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(user)}
-     const response =  await fetch(HostUrls+'/api/users/login',config);
-     const data = await response.json();
-     if(!response.ok){
-      toast.error(data.message);
-      setLodding(false)
-     }
-     else{
-     localStorage.setItem('auth',JSON.stringify(data));
-     setLodding(false);
-     if(auth?.user?.role == 'admin'){
-      navigate('/dashboard/users/contract');
-     }
-     else{
-      navigate('/');
-     }
-     }
-    }
-    catch(error:any){
+    try {
+      setLodding(true);
+      const config:any = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(user),
+        credentials: 'include',
+      };
+      const response = await fetch(HostUrls + "/api/users/login/", config);
+      const data = await response.json();
+      if (!response.ok) {
+        toast.error(data.message);
+        setLodding(false);
+      } else {
+        setAuth(data)
+        localStorage.setItem("auth", JSON.stringify(data));
+        setLodding(false);
+        console.log(auth?.user?.role)
+        if (auth?.user?.role !== "admin" && data.user.role !=='admin') {
+           navigate("/");
+        } else {
+          navigate("/dashboard/users/contract");
+        }
+      }
+    } catch (error: any) {
       console.log(error);
       //toast.error(error.response.data.message)
+    } finally {
+      setLodding(false);
     }
-    finally{
-      setLodding(false)
-    }
-  }
+  };
+
+  ////google login
+
   return (
-    <form onSubmit={SumbitHanler}>
-      <div className="w-full h-screen  bg-white flex justify-center items-center">
-        <div className="w-[55%]  md:h-[68%] grid grid-cols-1 md:grid-cols-2 gap-4 flex items-center justify-around bg-gradient-to-r from-custom-blue shadow-lg rounded-sm via-custom-light-blue to-custom-lightest-blue">
-          <div className="flex flex-col items-center gap-4 justify-center">
-            <div>
-              <img
-                alt="nusaiba-construction"
-                loading="lazy"
-                decoding="async"
-                data-nimg="1"
-                src="/cybercraft-logo.png"
-                className="md:w-[300px] w-[150px]"
+    <div className="flex bg-white h-screen justify-center w-full items-center">
+      <div className="flex grid grid-cols-1 bg-gradient-to-r justify-around rounded-sm shadow-lg w-[98%] from-custom-blue gap-4 items-center md:grid-cols-2 md:h-[68%] md:w-[55%] to-custom-lightest-blue via-custom-light-blue">
+        <div className="flex flex-col justify-center gap-4 items-center">
+          <div>
+            <img
+              alt="nusaiba-construction"
+              loading="lazy"
+              decoding="async"
+              data-nimg="1"
+              src="/cybercraft-logo.png"
+              className="w-[150px] md:w-[300px]"
+            />
+          </div>
+          <div className="flex justify-center w-[90%] item-center">
+            <p className="text-center text-gray-700 w-full md:text-[20px]">
+              Welcome back to CyberCraft Bangladesh, where your creativity
+              thrives
+            </p>
+          </div>
+        </div>
+        <form onSubmit={SumbitHanler}>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col w-[90%] gap-1 md:w-[70%] ml-5">
+              <label className="text-gray-600">Email</label>
+              <input
+                type="email"
+                required
+                value={user.email}
+                onChange={(e) =>
+                  setUser((pre) => ({ ...pre, email: e.target.value }))
+                }
+                className="rounded-lg focus:outline-none pl-2 py-3"
               />
             </div>
-            <div className="w-[90%] item-center flex justify-center">
-              <p className="w-full text-center text-gray-700 md:text-[20px]">
-                Welcome back to CyberCraft Bangladesh, where your creativity
-                thrives
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-col gap-4 ">
-            <div className="flex flex-col md:w-[70%] w-[90%] ml-5 gap-1">
-              <label className="text-gray-600">Email</label>
-              <input type="email" required value={user.email} onChange={(e)=>setUser((pre)=>({...pre,email:e.target.value}))} className="py-3 focus:outline-none pl-2 rounded-lg" />
-            </div>
-            <div className="flex flex-col md:w-[70%] w-[90%] ml-5 gap-1">
+            <div className="flex flex-col w-[90%] gap-1 md:w-[70%] ml-5">
               <label className="text-gray-600">Password</label>
-              <div className="relative flex w-full">
+              <div className="flex w-full relative">
                 <input
                   required
                   type={showPassword ? "text" : "password"}
-                  value={user.password} onChange={(e)=>setUser((pre)=>({...pre,password:e.target.value}))}
-                  className="py-3 w-full focus:outline-none pl-2 rounded-lg"
+                  value={user.password}
+                  onChange={(e) =>
+                    setUser((pre) => ({ ...pre, password: e.target.value }))
+                  }
+                  className="rounded-lg w-full focus:outline-none pl-2 py-3"
                 />
                 <div
                   onClick={() => setShowPassword((pre) => !pre)}
-                  className="absolute right-3 cursor-pointer text-gray-400   mt-2"
+                  className="text-gray-400 absolute cursor-pointer mt-2 right-3"
                 >
                   {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
                 </div>
               </div>
             </div>
-            <div className="flex justify-between md:w-[70%] w-[90%] ml-5 gap-1">
+            <div className="flex justify-between w-[90%] gap-1 md:w-[70%] ml-5">
               <div className="flex gap-1">
-                <input className="w-4 " type="radio" />
+                <input className="w-4" type="radio" />
                 <p className="italic">Remember me</p>
               </div>
-              <Link className=" text-blue-500" to="/forget-password">
+              <Link className="text-blue-500" to="/forget-password">
                 Forget Password?
               </Link>
             </div>
-            <div className="flex flex-col md:w-[70%] w-[90%] ml-5 gap-1">
-              <button type="submit" className=" bg-[#184086] py-2 text-white rounded-lg">
-                {lodding?'Login...':'Login'}
+            <div className="flex flex-col w-[90%] gap-1 md:w-[70%] ml-5">
+              <button
+                type="submit"
+                className="bg-[#184086] rounded-lg text-white py-2"
+              >
+                {lodding ? "Login..." : "Login"}
               </button>
             </div>
-            <span className="md:w-[80%] w-[100%] justify-center flex">or</span>
-            <div className="flex flex-col md:w-[70%] w-[90%] ml-5 gap-1">
-            <button className="px-4 py-2  flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150">
-              <img
-                className="w-6 h-6"
-                src="https://www.svgrepo.com/show/475656/google-color.svg"
-                loading="lazy"
-                alt="google logo"
-              />
-              <span>Login with Google</span>
-            </button>
+            <span className="flex justify-center w-[100%] md:w-[80%]">or</span>
+            <div className="flex flex-col w-[90%] gap-1 md:w-[70%] ml-5">
+              <Link className="flex flex-col w-[100%] gap-1" to={HostUrls + "/api/users/google"}>
+                <p className="flex border-slate-200 rounded-lg text-slate-700 dark:border-slate-700 dark:hover:border-slate-500 dark:hover:text-slate-300 dark:text-slate-200 duration-150 gap-2 hover:border-slate-400 hover:shadow hover:text-slate-900 px-4 py-2 transition">
+                  <img
+                    className="h-6 w-6"
+                    src="https://www.svgrepo.com/show/475656/google-color.svg"
+                    loading="lazy"
+                    alt="google logo"
+                  />
+                  <span>Login with Google</span>
+                </p>
+              </Link>
             </div>
-            <p className="md:w-[80%] w-[100%] justify-center flex py-2">
+            <p className="flex justify-center w-[100%] md:w-[80%] py-2">
               Don't have an account?{" "}
               <Link
                 to="/register"
-                className=" border-b border-b-blue-500 text-blue-500 italic ml-1"
+                className="border-b border-b-blue-500 text-blue-500 italic ml-1"
               >
                 Sign Up
               </Link>
             </p>
           </div>
-        </div>
+        </form>
       </div>
-    </form>
+    </div>
   );
 }
 
