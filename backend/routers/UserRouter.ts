@@ -5,11 +5,9 @@ import UserModel from '../models/UserModel'
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { GetUserMessagesController, UserContractController, UserCreateController, UserLoginController, UserLogoutController } from "../controllers/UserController";
 import GetUserToken from "../tokens/GetUserToken";
-import pdfkit from 'pdfkit';
-import nodemailer from 'nodemailer';
-import fs from 'fs';
 import path from 'path';
 import multer from 'multer';
+import shortid from 'shortid'
 import { isUserController } from "../middleware/UserMiddleware";
 dotenv.config({path:'.env'});
 const router = express.Router();
@@ -21,15 +19,14 @@ router.get('/logout',UserLogoutController);
 
 // Set up multer storage options
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'public/files/');
+    destination: function (req, file, cb) {
+      cb(null,path.join(path.dirname(__dirname),'../public/images/files/'))
     },
-    filename: (req, file, cb) => {
-      cb(null, `${Date.now()}${path.extname(file.originalname)}`);
+    filename: function (req, file, cb) {
+      cb(null, shortid.generate() + '-' + file.originalname)
     }
-  });
-  const upload = multer({ storage });
-
+  })
+const upload = multer({ storage: storage })
 ///create message
 router.post('/contract',isUserController,upload.none(),UserContractController);
 ///get message
@@ -42,7 +39,7 @@ passport.use(
         clientID: process.env.GOOGLE_CLIENT_ID || "your-default-client-id", // google client id
         clientSecret: process.env.GOOGLE_CLIENT_SECRET || "your-default-client-secret", // google client secret
         // the callback url added while creating the Google auth app on the console
-        callbackURL:"http://localhost:5000/api/users/auth/google/redirect",
+        callbackURL:"http://localhost:8000/api/users/auth/google/redirect",
       },
       async function (accessToken, refreshToken, profile,done) {
         const email =

@@ -7,6 +7,9 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { toast } from "react-toastify";
 import HostUrls from "../../pages/host/HostUrls";
 import { Link } from "react-router-dom";
+const downloadPDF = (pdf:string) => {
+  window.open(HostUrls+`/images/files/${pdf}`, "_blank");
+}
 const columns: GridColDef[] = [
   { field: "sn", headerName: "SN", width: 70 },
   { field: "name", headerName: "Name", width: 130 },
@@ -29,7 +32,7 @@ const columns: GridColDef[] = [
       return (
         <>
           <div className="flex gap-4 ">
-            <div className=" text-[#88a3d2] cursor-pointer">
+            <div onClick={()=>downloadPDF(props.row.message)} className=" text-[#88a3d2] cursor-pointer">
               <FileDownloadIcon />
             </div>
             <div className="text-green-400 cursor-pointer ">
@@ -51,6 +54,7 @@ const columns: GridColDef[] = [
 const paginationModel = { page: 0, pageSize: 5 };
 
 export default function UserContractTable() {
+
   interface UserMessageProps {
     user: string;
     message: string;

@@ -16,14 +16,14 @@ const app = express();
 ///access .env file path
 dotenv.config({path:'.env'});
 
+
 const corsOptions = {
-    origin: 'http://localhost:3001', // The frontend URL
+    origin: 'http://localhost:3000', // The frontend URL
     credentials: true, // Allow sending cookies with cross-origin requests
 }
-
+               
 //file middleware
-app.use('/public', express.static(path.join(__dirname, '.public')));
-
+app.use('/images', express.static(path.join(__dirname, './public/images')));
 ///middleware
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended:true}));

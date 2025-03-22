@@ -18,7 +18,7 @@ export const sendEmail = async (pdfPath: string, res: any,req:any): Promise<void
 
     const mailOptions = {
       from: process.env.SEND_EMAIL,
-      to: "mdasadulislam20302030@gmail.com",
+      to: process.env.RECEVIER_EMAIL,
       subject: "New Form Submission",
       text: "A new form has been submitted. You can download the PDF here:",
       attachments: [

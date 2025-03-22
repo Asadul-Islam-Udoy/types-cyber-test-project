@@ -92,7 +92,7 @@ export const UserLogoutController = AsyncErrorHanler(
 export const UserContractController=AsyncErrorHanler(async(req:Request,res:Response):Promise<any>=>{
   const {name,email,message} = req.body;
     const doc = new pdfkit();
-    const pdfPath = `public/files/form-data-${Date.now()}.pdf`;
+    const pdfPath = `public/images/files/form-data-${Date.now()}.pdf`;
     doc.pipe(fs.createWriteStream(pdfPath));
   
     doc.fontSize(25).text('Form Data PDF', { align: 'center' });
