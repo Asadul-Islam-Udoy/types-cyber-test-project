@@ -36,12 +36,12 @@ MongoDb.js
 ui-Router
 
 ## Default Admin Dashboard
-url = /login
+url = https://task-cb-test.onrender.com/login
 email = admin@gmail.com
 pass = 12345
 
 ## Default User 
-url = /login
+url = https://task-cb-test.onrender.com/login
 email = user@gmail.com
 pass = 12345
 
