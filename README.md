@@ -1,6 +1,6 @@
 # Simple Task of CyberCraft Bangladesh
 
-This is a sample application that demonstrates an task using the MERN stack with TypeScript. The application loads products a MongoDB database and displays them. Users can send message to admin  with a PDF copy of each submitted data to md@nusaiba.com.bd
+This is a sample application that demonstrates an task using the MERN stack with TypeScript. The application loads contract information a MongoDB database and displays them. Users can send message to admin  with a PDF copy of each submitted data to md@nusaiba.com.bd
 
 # Getting Started
 
